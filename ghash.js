@@ -110,7 +110,7 @@ GHASH.prototype._multiply = function () {
 }
 
 GHASH.prototype.update = function (buf) {
-  this.cache = Buffer.concat([this.cache, buf])
+  this.cache = Buffer.concat([this.cache, buf].map(function(el) { return Buffer.from(el) }))
   var chunk
   while (this.cache.length >= 16) {
     chunk = this.cache.slice(0, 16)
@@ -121,7 +121,7 @@ GHASH.prototype.update = function (buf) {
 
 GHASH.prototype.final = function (abl, bl) {
   if (this.cache.length) {
-    this.ghash(Buffer.concat([this.cache, ZEROES], 16))
+    this.ghash(Buffer.concat([this.cache, ZEROES].map(function(el) { return Buffer.from(el) }), 16))
   }
 
   this.ghash(fromArray([0, abl, 0, bl]))
